@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "927975864587",
+    "firebase_url": "https://qaapp5-7ee08.firebaseio.com",
+    "project_id": "qaapp5-7ee08",
+    "storage_bucket": "qaapp5-7ee08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927975864587:android:0caf4d7aaa93106d",
+        "android_client_info": {
+          "package_name": "com.example.androidsunsun.qa_app5"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927975864587-rs555vvusb9gotbskmmaellm264dlbbg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpFoaPfF34hSXsqrmOqkpY2tXEURlYeJk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
