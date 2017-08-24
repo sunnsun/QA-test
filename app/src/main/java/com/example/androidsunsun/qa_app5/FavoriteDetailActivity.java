@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-public class QuestionDetailActivity extends AppCompatActivity {
+public class FavoriteDetailActivity extends AppCompatActivity {
 
     private ListView mListView;
     private Question mQuestion;
@@ -25,10 +26,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
     private DatabaseReference mAnswerRef;
 
-    private FloatingActionButton mFavoriteButton;
-
-    private DatabaseReference mFavoriteRef;
-    private DatabaseReference mDatabaseReference;
+    private Button mNonFavoriteButton;
+    private Button mFavoriteButton;
+    public boolean mFavorite = false;
 
 
     private ChildEventListener mEventListener = new ChildEventListener() {
@@ -70,31 +70,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
         public void onCancelled(DatabaseError databaseError) {
         }
     };
-    private ChildEventListener mFavoriteEventListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            //TODO　onChildAdded お気に入りボタンの切り替えの処理
-
-
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +80,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         mQuestion = (Question) extras.get("question");
 
-
         setTitle(mQuestion.getTitle());
 
         // ListViewの準備
@@ -114,28 +88,39 @@ public class QuestionDetailActivity extends AppCompatActivity {
         mListView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        mFavoriteRef = mDatabaseReference.child(Const.FavoriteKEY).child(user.getUid()).child(mQuestion.getQuestionUid());
-        mFavoriteRef.addChildEventListener(mFavoriteEventListener);
+//ListView（お気に入り）をタップした時の遷移
+        mListView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AnswerSendActivity.class);
+                intent.putExtra("question", mQuestion);
+                startActivity(intent);
+            }
+        });
 
 
         //Buttonの準備
-        mFavoriteButton = (FloatingActionButton) findViewById(R.id.favoriteButton);
-        if (user == null) {
-            //ログインしていないときはお気に入りfabを非表示
-            mFavoriteButton.setVisibility(View.GONE);
-        } else {
-            //ログインしているときはお気に入りfabを表示
-            mFavoriteButton.setVisibility(View.VISIBLE);
-            if (mFavoriteRef == null) {
-                //お気に入りに登録していないときの画像
-                mFavoriteButton.setImageResource(R.drawable.illust2148);
-            } else {
-                //お気に入りに登録しているときの画像
-                mFavoriteButton.setImageResource(R.drawable.illust2147);
+        mFavoriteButton = (Button) findViewById(R.id.favoriteButton);
+        mNonFavoriteButton = (Button) findViewById(R.id.nonFavoriteButton);
+        mNonFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (user == null) {
+                    return;
+                } else {
+                    if (mFavorite == false) {
+                        mNonFavoriteButton.setVisibility(View.GONE);
+                        mFavoriteButton.setVisibility(View.VISIBLE);
+                    } else {
+                        mNonFavoriteButton.setVisibility(View.VISIBLE);
+                        mFavoriteButton.setVisibility(View.GONE);
+                    }
+                }
             }
-        }
+        });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

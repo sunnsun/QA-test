@@ -1,6 +1,5 @@
 package com.example.androidsunsun.qa_app5;
 
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -48,19 +47,19 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
     private ImageView mImageView;
     private Button mSendButton;
 
-    private int mGenre;         //ジャンルを保持する
-    private Uri mPictureUri;    //カメラで撮影した画像を保存するURI
+    private int mGenre;
+    private Uri mPictureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_send);
 
-        //渡ってきたジャンルの番号を保持する
+        // 渡ってきたジャンルの番号を保持する
         Bundle extras = getIntent().getExtras();
         mGenre = extras.getInt("genre");
 
-        //UIの準備
+        // UIの準備
         setTitle("質問作成");
 
         mTitleText = (EditText) findViewById(R.id.titleText);
@@ -84,20 +83,15 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
             if (resultCode != RESULT_OK) {
                 if (mPictureUri != null) {
                     getContentResolver().delete(mPictureUri, null, null);
-
+                    mPictureUri = null;
                 }
                 return;
             }
+
             // 画像を取得
-            Uri uri;
-            if (data == null) {
-                uri = mPictureUri;
-            } else if (data.getData() == null) {
-                uri = mPictureUri;
-            } else {
-                uri = data.getData();
-            }
-            //URIからBitmapを取得する
+            Uri uri = (data == null || data.getData() == null) ? mPictureUri : data.getData();
+
+            // URIからBitmapを取得する
             Bitmap image;
             try {
                 ContentResolver contentResolver = getContentResolver();
@@ -108,33 +102,33 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
                 return;
             }
 
-            //取得したBitmapの長辺を500pixelにリサイズする
+            // 取得したBimapの長辺を500ピクセルにリサイズする
             int imageWidth = image.getWidth();
             int imageHeight = image.getHeight();
-            float scale = Math.min((float) 500 / imageWidth, (float) 500 / imageHeight); //(1)
+            float scale = Math.min((float) 500 / imageWidth, (float) 500 / imageHeight); // (1)
 
             Matrix matrix = new Matrix();
             matrix.postScale(scale, scale);
 
-            Bitmap resizedImage = Bitmap.createBitmap(image, 0, 0, imageWidth, imageHeight, matrix, true);
+            Bitmap resizedImage =  Bitmap.createBitmap(image, 0, 0, imageWidth, imageHeight, matrix, true);
 
-            //BitmapをImageViewに設定する
+            // BitmapをImageViewに設定する
             mImageView.setImageBitmap(resizedImage);
-            mPictureUri = null;
 
+            mPictureUri = null;
         }
     }
 
     @Override
     public void onClick(View v) {
         if (v == mImageView) {
-            //パーミッションの許可状態を確認する
+            // パーミッションの許可状態を確認する
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    //許可されている
+                    // 許可されている
                     showChooser();
                 } else {
-                    //許可されていないので、許可ダイアログを表示する
+                    // 許可されていないので許可ダイアログを表示する
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
 
                     return;
@@ -144,7 +138,7 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
             }
         } else if (v == mSendButton) {
             // キーボードが出てたら閉じる
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager im = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
             DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
@@ -211,25 +205,26 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showChooser() {
-        //ギャラリーから選択するIntent
+        // ギャラリーから選択するIntent
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        //カメラで撮影するIntent
+        // カメラで撮影するIntent
         String filename = System.currentTimeMillis() + ".jpg";
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, filename);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        mPictureUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        mPictureUri = getContentResolver()
+                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPictureUri);
 
-        //ギャラリー選択のIntentを与えて、createChooserメソッドを呼ぶ
+        // ギャラリー選択のIntentを与えてcreateChooserメソッドを呼ぶ
         Intent chooserIntent = Intent.createChooser(galleryIntent, "画像を取得");
 
-        //EXTRA_INTENT_INTENTS にカメラ撮影のIntentを追加
+        // EXTRA_INITIAL_INTENTS にカメラ撮影のIntentを追加
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
 
         startActivityForResult(chooserIntent, CHOOSER_REQUEST_CODE);

@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context="com.example.androidsunsun.qa_app5.QuestionDetailActivity">
+    tools:context="com.example.androidsunsun.qa_app5.FavoriteDetailActivity">
 
     <ListView
         android:id="@+id/listView"
@@ -18,22 +18,28 @@
         android:layout_marginEnd="22dp" />
 
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/favoriteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/illust2148" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/listView"
+        android:background="@drawable/btn" />
+
+    <Button
+        android:id="@+id/nonFavoriteButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/illust2148"
+        android:layout_alignParentEnd="true" />
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/plus"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/plus" />
+        android:layout_alignStart="@+id/nonFavoriteButton" />
 </RelativeLayout>

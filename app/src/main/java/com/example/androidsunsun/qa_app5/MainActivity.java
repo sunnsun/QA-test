@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_computer) {
                     mToolbar.setTitle("コンピューター");
                     mGenre = 4;
+                } else if (id == R.id.nav_favorite) {
+                    mToolbar.setTitle("お気に入り");
+                    mGenre = 5;
                 }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -208,13 +211,24 @@ public class MainActivity extends AppCompatActivity {
         mQuestionArrayList = new ArrayList<Question>();
         mAdapter.notifyDataSetChanged();
 
+
+//ドロワー項目の処理（１～４はQuestionDetailActivity.classへintent)
+//                  （５はfavorite.classへintent)
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Questionのインスタンスを渡して質問詳細画面を起動する
-                Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
-                intent.putExtra("question", mQuestionArrayList.get(position));
-                startActivity(intent);
+                if (mGenre < 4) {
+                    Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
+
+                    intent.putExtra("question", mQuestionArrayList.get(position));
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(),FavoriteDetailActivity.class);
+                    intent.putExtra("question", mQuestionArrayList.get(position));
+                    startActivity(intent);
+                }
             }
         });
     }
