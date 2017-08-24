@@ -210,8 +210,16 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new QuestionsListAdapter(this);
         mQuestionArrayList = new ArrayList<Question>();
         mAdapter.notifyDataSetChanged();
-
-
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Questionのインスタンスを渡して質問詳細画面を起動する
+                Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
+                intent.putExtra("question", mQuestionArrayList.get(position));
+                startActivity(intent);
+            }
+        });
+/*
 //ドロワー項目の処理（１～４はQuestionDetailActivity.classへintent)
 //                  （５はfavorite.classへintent)
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -231,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        */
     }
 
     @Override

@@ -119,7 +119,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         mFavoriteRef = mDatabaseReference.child(Const.FavoriteKEY).child(user.getUid()).child(mQuestion.getQuestionUid());
         mFavoriteRef.addChildEventListener(mFavoriteEventListener);
 
-
+/*
         //Buttonの準備
         mFavoriteButton = (FloatingActionButton) findViewById(R.id.favoriteButton);
         if (user == null) {
@@ -136,7 +136,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 mFavoriteButton.setImageResource(R.drawable.illust2147);
             }
         }
-
+*/
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
