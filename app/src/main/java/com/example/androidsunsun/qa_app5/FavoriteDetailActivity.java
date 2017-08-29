@@ -98,30 +98,6 @@ public class FavoriteDetailActivity extends AppCompatActivity {
             }
         });
 
-
-        //Buttonの準備
-        mFavoriteButton = (Button) findViewById(R.id.favoriteButton);
-        mNonFavoriteButton = (Button) findViewById(R.id.nonFavoriteButton);
-        mNonFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                if (user == null) {
-                    return;
-                } else {
-                    if (mFavorite == false) {
-                        mNonFavoriteButton.setVisibility(View.GONE);
-                        mFavoriteButton.setVisibility(View.VISIBLE);
-                    } else {
-                        mNonFavoriteButton.setVisibility(View.VISIBLE);
-                        mFavoriteButton.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -49,6 +49,8 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
 
     private int mGenre;
     private Uri mPictureUri;
+    private DatabaseReference mDatabaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

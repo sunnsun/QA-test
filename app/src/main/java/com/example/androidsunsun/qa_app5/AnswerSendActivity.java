@@ -1,11 +1,9 @@
 package com.example.androidsunsun.qa_app5;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnswerSendActivity extends AppCompatActivity implements View.OnClickListener,DatabaseReference.CompletionListener {
+public class AnswerSendActivity extends AppCompatActivity implements View.OnClickListener, DatabaseReference.CompletionListener {
 
     private EditText mAnswerEditText;
     private Question mQuestion;

@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     mGenre = 4;
                 } else if (id == R.id.nav_favorite) {
                     mToolbar.setTitle("お気に入り");
-                    mGenre = 5;
+//intent favorite.activityを呼ぶ処理
                 }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -219,14 +219,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-/*
+
 //ドロワー項目の処理（１～４はQuestionDetailActivity.classへintent)
 //                  （５はfavorite.classへintent)
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Questionのインスタンスを渡して質問詳細画面を起動する
-                if (mGenre < 4) {
+                if (mGenre <= 4) {
                     Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
 
                     intent.putExtra("question", mQuestionArrayList.get(position));
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        */
+
     }
 
     @Override

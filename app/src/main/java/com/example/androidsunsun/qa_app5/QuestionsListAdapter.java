@@ -1,4 +1,5 @@
 package com.example.androidsunsun.qa_app5;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +39,7 @@ public class QuestionsListAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
 
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_questions, parent, false);
