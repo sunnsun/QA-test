@@ -35,24 +35,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
     public ChildEventListener mEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            HashMap map = (HashMap) dataSnapshot.getValue();
+            mFavoriteFab.setImageResource(R.drawable.illust2147);
+            favorite = true;
 
-            String answerUid = dataSnapshot.getKey();
-            favoriteQid = (String) dataSnapshot.getValue();
-
-            for (Answer answer : mQuestion.getAnswers()) {
-                // 同じAnswerUidのものが存在しているときは何もしない
-                if (answerUid.equals(answer.getAnswerUid())) {
-                    return;
-                }
-            }
-            String body = (String) map.get("body");
-            String name = (String) map.get("name");
-            String uid = (String) map.get("uid");
-
-            Answer answer = new Answer(body, name, uid, answerUid);
-            mQuestion.getAnswers().add(answer);
-            mAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -90,31 +75,48 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         mFavoriteFab = (FloatingActionButton) findViewById(R.id.favoriteFab);
         mFavoriteFab.setImageResource(R.drawable.illust2148);
+
+//問い合わせ結果でボタンの表示を切り替える処理
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(user.getUid()).child(mQuestion.getQuestionUid());
+        mFavoriteRef.addChildEventListener(mEventListener);
+
         mFavoriteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(mQuestion.getQuestionUid());
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (favoriteQid != null) {
-                    //登録済みの場合
-                    mFavoriteRef.removeValue();
-                    favorite = false;
-                    mFavoriteFab.setImageResource(R.drawable.illust2148);
-                } else {
-                    //favoriteボタンの切り替え
-                    favorite = true;
-                    mFavoriteFab.setImageResource(R.drawable.illust2147);
+                if(user == null){
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    if (favorite == true) {
+                        //登録済みの場合
+                        mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(user.getUid()).child(mQuestion.getQuestionUid());
+                        mFavoriteRef.removeValue();
+                        favorite = false;
+                        mFavoriteFab.setImageResource(R.drawable.illust2148);
+                        Snackbar.make(findViewById(android.R.id.content), "お気に入りを解除しました。", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        //favoriteボタンの切り替え
+                        favorite = true;
+                        mFavoriteFab.setImageResource(R.drawable.illust2147);
 
-                    //favoritesPATHへの登録
-                    DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference favoriteRef = dataBaseReference.child(Const.FavoritesPATH).child(mQuestion.getQuestionUid());
-                    Map<String, String> data = new HashMap<String, String>();
+                        //favoritesPATHへの登録
+                        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+                        mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(user.getUid()).child(mQuestion.getQuestionUid());
 
-                    data.put("favoriteQid", mQuestion.getQuestionUid());
-                    favoriteRef.push().setValue(data, this);
+                        Map<String, String> data = new HashMap<String, String>();
+                        data.put("favoriteQid", mQuestion.getQuestionUid());
+                        mFavoriteRef.setValue(data);
 
-                    //snackbarの表示
-                    Snackbar.make(findViewById(android.R.id.content), "お気に入りに登録しました。", Snackbar.LENGTH_LONG).show();
+                        //snackbarの表示
+                        Snackbar.make(findViewById(android.R.id.content), "お気に入りに登録しました。", Snackbar.LENGTH_LONG).show();
+
+                        //お気に入りされていたら
+                    }
                 }
             }
         });
