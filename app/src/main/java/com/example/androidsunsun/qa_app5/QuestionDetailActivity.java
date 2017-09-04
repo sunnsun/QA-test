@@ -37,7 +37,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             mFavoriteFab.setImageResource(R.drawable.illust2147);
             favorite = true;
-
         }
 
         @Override
@@ -116,6 +115,9 @@ public class QuestionDetailActivity extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), "お気に入りに登録しました。", Snackbar.LENGTH_LONG).show();
 
                         //お気に入りされていたら
+
+
+
                     }
                 }
             }

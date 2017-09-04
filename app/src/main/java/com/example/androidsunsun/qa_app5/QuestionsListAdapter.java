@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static com.example.androidsunsun.qa_app5.R.id.titleTextView;
-
 public class QuestionsListAdapter extends BaseAdapter{
     private LayoutInflater mLayoutInflater = null;
     private ArrayList<Question> mQuestionArrayList;
@@ -68,4 +66,6 @@ public class QuestionsListAdapter extends BaseAdapter{
     public void setQuestionArrayList(ArrayList<Question> questionArrayList) {
         mQuestionArrayList = questionArrayList;
     }
+
+
 }
