@@ -30,7 +30,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
     private FloatingActionButton mFavoriteFab;
 
-    private String favoriteQid;
+    FirebaseUser user;
 
     public ChildEventListener mEventListener = new ChildEventListener() {
         @Override
@@ -76,21 +76,22 @@ public class QuestionDetailActivity extends AppCompatActivity {
         mFavoriteFab.setImageResource(R.drawable.illust2148);
 
 //問い合わせ結果でボタンの表示を切り替える処理
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(user.getUid()).child(mQuestion.getQuestionUid());
+
+        mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(mQuestion.getQuestionUid());
         mFavoriteRef.addChildEventListener(mEventListener);
 
         mFavoriteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if(user == null){
+                if (user == null) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
-                }else {
+                } else {
                     if (favorite == true) {
                         //登録済みの場合
                         mFavoriteRef = mDatabaseReference.child(Const.FavoritesPATH).child(user.getUid()).child(mQuestion.getQuestionUid());
@@ -114,10 +115,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
                         //snackbarの表示
                         Snackbar.make(findViewById(android.R.id.content), "お気に入りに登録しました。", Snackbar.LENGTH_LONG).show();
 
-                        //お気に入りされていたら
-
-
-
                     }
                 }
             }
@@ -128,7 +125,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // ログイン済みのユーザーを取得する
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user = FirebaseAuth.getInstance().getCurrentUser();
 
                 if (user == null) {
                     // ログインしていなければログイン画面に遷移させる
